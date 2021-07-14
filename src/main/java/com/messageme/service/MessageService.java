@@ -14,17 +14,13 @@ public class MessageService {
 
   private final MessageRepository messageRepository;
 
-  public Message findById(Integer id) {
-    return messageRepository.findById(id).orElse(null);
+  public Message saveMessage(Message message){
+    //TODO: Consider adding a queue here, lots of messages could cause problems.
+    return messageRepository.saveAndFlush(message);
   }
 
-  public List<Message> findAllChildrenById(Integer id, String order) {
-    List<Message> messages = messageRepository.findAllChildrenById(id);
-
-    if (order.equals("0")){
-      Collections.reverse(messages);
-    }
-    return messages;
+  public Message findById(Integer id) {
+    return messageRepository.findById(id).orElse(null);
   }
 
   public List<Message> getMessagesForRecipient(String recipient, String sender, Integer limit){
@@ -35,8 +31,7 @@ public class MessageService {
     //get all messages sender has sent to recipient up to the the max of limit or 100
     Integer validatedLimit = getValidatedLimit(limit);
 
-
-    return messageRepository.findAllByReceiverFromSenderWithLimit(recipient, sender, limit);
+    return messageRepository.findAllByReceiverFromSenderWithLimit(recipient, sender, validatedLimit);
   }
 
   public List<Message> getAllRecentMessagesUptoLimitOrDays(Integer limit){
