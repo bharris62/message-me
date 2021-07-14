@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Some of these items could have been retrieved using build in Hibernate ORM functions, but I find them often to be
+ * much more finnecky and harder to read than the sql, and hibernate takes care of cleaning the input data.
+ */
 @Repository
 public interface MessageRepository extends JpaRepository<Message, String> {
   List<Message> findAll();
